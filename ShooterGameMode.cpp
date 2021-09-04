@@ -11,7 +11,10 @@
 #include "Bots/ShooterAIController.h"
 #include "ShooterTeamStart.h"
 
-
+AShooterGameMode::Beginplay()
+{
+	print("一切刚刚开始");
+}
 AShooterGameMode::AShooterGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnOb(TEXT("/Game/Blueprints/Pawns/PlayerPawn"));
@@ -509,19 +512,6 @@ void AShooterGameMode::CreateBotControllers()
 	}
 }
 
-AShooterAIController* AShooterGameMode::CreateBot(int32 BotNum)
-{
-	FActorSpawnParameters SpawnInfo;
-	SpawnInfo.Instigator = nullptr;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	SpawnInfo.OverrideLevel = nullptr;
-
-	UWorld* World = GetWorld();
-	AShooterAIController* AIC = World->SpawnActor<AShooterAIController>(SpawnInfo);
-	InitBot(AIC, BotNum);
-
-	return AIC;
-}
 
 void AShooterGameMode::StartBots()
 {
@@ -549,23 +539,5 @@ void AShooterGameMode::InitBot(AShooterAIController* AIController, int32 BotNum)
 	}
 }
 
-void AShooterGameMode::RestartGame()
-{
-	// Hide the scoreboard too !
-	for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
-	{
-		AShooterPlayerController* PlayerController = Cast<AShooterPlayerController>(*It);
-		if (PlayerController != nullptr)
-		{
-			AShooterHUD* ShooterHUD = Cast<AShooterHUD>(PlayerController->GetHUD());
-			if (ShooterHUD != nullptr)
-			{
-				// Passing true to bFocus here ensures that focus is returned to the game viewport.
-				ShooterHUD->ShowScoreboard(false, true);
-			}
-		}
-	}
 
-	Super::RestartGame();
-}
 
