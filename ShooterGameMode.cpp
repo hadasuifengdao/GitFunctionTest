@@ -15,6 +15,11 @@ AShooterGameMode::Beginplay()
 {
 	print("一切刚刚开始");
 }
+
+AShooterGameMode::TestGitFunc()
+{
+	print("Everything is ok");
+}
 AShooterGameMode::AShooterGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnOb(TEXT("/Game/Blueprints/Pawns/PlayerPawn"));
@@ -206,12 +211,6 @@ void AShooterGameMode::FinishMatch()
 
 		// lock all pawns
 		// pawns are not marked as keep for seamless travel, so we will create new pawns on the next match rather than
-		// turning these back on.
-		for (APawn* Pawn : TActorRange<APawn>(GetWorld()))
-		{
-			Pawn->TurnOff();
-		}
-
 		// set up to restart the match
 		MyGameState->RemainingTime = TimeBetweenMatches;
 	}
@@ -224,15 +223,7 @@ void AShooterGameMode::RequestFinishAndExitToMainMenu()
 	UShooterGameInstance* const GameInstance = Cast<UShooterGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
-		GameInstance->RemoveSplitScreenPlayers();
-	}
 
-	AShooterPlayerController* LocalPrimaryController = nullptr;
-	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
-	{
-		AShooterPlayerController* Controller = Cast<AShooterPlayerController>(*Iterator);
-
-		if (Controller == NULL)
 		{
 			continue;
 		}
